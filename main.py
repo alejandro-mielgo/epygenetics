@@ -8,7 +8,7 @@ from mutation import mutate_real, mutate_discrete
 import logging
 
 
-def f(x: list[float]) -> float:
+def target_function(x: list[float]) -> float:
 
     return 60 - (
         x[0] ** 2
@@ -18,9 +18,13 @@ def f(x: list[float]) -> float:
     )
 
 
-# def f(x: np.ndarray) -> float:
-#     return -x[0] ** 2 -x[1] ** 2 + 20
-
+n_genarations :int = 100
+lower_bound :tuple[float] =(-8,-8)
+upper_bound :tuple[float] = (8, 8)
+pop_size :int = 100
+mutation_rate:float = 0.5
+crossover_method:str = "opc"
+history:dict = {}
 
 
 if __name__ == "__main__":
@@ -30,30 +34,24 @@ if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s %(message)s',filename='logs/genetics.log',level=logging.INFO)
 
 
-    n_genarations :int = 100
-    lower_bound :list[float] = [-5,-5]
-    upper_bound :list[float]= [5, 5]
-    pop_size :int = 100
-    mutation_rate = 0.15
-    crossover_method="opc"
-    history = {}
-
     population : Population = Population(kind="real", population_size=pop_size, dimension=2)
     population.generate_uniform(lower_bound=lower_bound, upper_bound=upper_bound)
 
 
     for i in range(n_genarations):
 
-        population.evaluate(f)
+        population.evaluate(target_function)
         population.sort_by_fitness()
-        parents_indexes :np.ndarray=  tournament_sampling(population.population_size, 2)
+        parents_indexes :np.ndarray =  tournament_sampling(population.population_size, 2)
         parents :np.ndarray = population.individuals[parents_indexes]
         children = crossover(parents, method=crossover_method)
         population.individuals = mutate_real(children, mutation_rate=mutation_rate)
+        logging.info(f'best fitness generation {i} : {float(population.fitness[0]):.4f} \t found in {population.individuals[0]} ')
+   
 
 
     population.sort_by_fitness()
-    population.evaluate(f)
+    population.evaluate(target_function)
     population.get_stats()
     logging.info(f"n_gen:{n_genarations}, pop size: {pop_size}, mut_rate:{mutation_rate}")
     logging.info(population.stats)
