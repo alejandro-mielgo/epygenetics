@@ -2,8 +2,7 @@ import numpy as np
 
 
 def evaluate(population: np.ndarray, fitness_function) -> np.ndarray:
-    fitness = np.ma
-
+    fitness=[]
     print(fitness)
     return fitness
 

@@ -4,7 +4,6 @@ from generation import generate_uniform
 
 class Population:
 
-
     def __init__(
         self, kind: str, population_size: int, dimension: int, **kwargs
     ) -> None:
@@ -102,5 +101,6 @@ if __name__ == "__main__":
     pop_1.evaluate(f)
     pop_1.sort_by_fitness()
     print(pop_1)
+    print(pop_1.individuals)
 
 
