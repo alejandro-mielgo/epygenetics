@@ -1,6 +1,5 @@
 import numpy as np
-from utils import *
-import random
+from .utils import sort_population, evaluate
 
 
 def roulette_wheel_selection(fitness: np.ndarray) -> np.ndarray:

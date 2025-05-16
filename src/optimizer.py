@@ -1,40 +1,25 @@
 import numpy as np
 import logging
 
-from generation import generate_uniform
-from selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
-from crossover import crossover
-from mutation import mutate_real, mutate_discrete
+from .generation import generate_uniform
+from .selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
+from .crossover import crossover
+from .mutation import mutate_real, mutate_discrete
 
-from utils import start_logs, log_config, evaluate, sort_population, get_stats, log_row
-
-
-def target_function(x:np.ndarray) -> float:
-
-    return 60 - (
-        x[:,0] ** 2  - 10 * np.cos(2 * np.pi * x[:,0])
-        + x[:,1] ** 2 - 10 * np.cos(2 * np.pi * x[:,1])
-    )
+from .utils import start_logs, log_config, evaluate, sort_population, get_stats, log_row, bounce_population, create_bound_matrix
 
 
-param : dict = {
-    "n_generations"  : 100,
-    "lower_bound" : (-8,-8),
-    "upper_bound"  : (8, 8),
-    "pop_size"  : 100,
-    "mutation_rate" : 0.5,
-    "crossover_method" : "opc"
-}
 
-
-if __name__ == "__main__":
+def maximize(param, target_function):
 
 
     start_logs()
     log_config(param=param)
     history = {"mean":[],"stdev":[],"max_fit":[],"min_fit":[],"median":[]}
 
-
+    lower_bound_matrix, upper_bound_matrix = create_bound_matrix(lower_bounds=param['lower_bound'],
+                                                                 upper_bounds=param["upper_bound"],
+                                                                 pop_size=param["pop_size"])
 
     population:np.ndarray = generate_uniform(lower_bound=param["lower_bound"],
                                              upper_bound=param["upper_bound"],
@@ -67,7 +52,9 @@ if __name__ == "__main__":
         mutated_children = mutate_real(children,mutation_rate=param['mutation_rate'])
         
         population = mutated_children
-        population[-1] = best_individual
+        population[-1] = best_individual  # keep the best individual
+
+        population = bounce_population(population,lower_bound_matrix,upper_bound_matrix) #truncate if they are out of the allowed zone
 
 
 
