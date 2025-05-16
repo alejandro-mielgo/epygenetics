@@ -21,3 +21,6 @@ def booth(x:np.ndarray)->np.ndarray:
 - roulette wheel selection
 - stochastic_sampling
 - tournament_sampling
+
+
+[Test functions for optimization algorithms](https://en.wikipedia.org/wiki/Test_functions_for_optimization)

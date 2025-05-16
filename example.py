@@ -26,4 +26,5 @@ parameters : dict = {
 }
 
 if __name__ == "__main__":
-    maximize(param=parameters,target_function=booth)
+    maximize(param=parameters, target_function=booth)
+

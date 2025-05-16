@@ -1,5 +1,6 @@
 import numpy as np
 import logging
+from collections.abc import Callable
 
 from .generation import generate_uniform
 from .selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
@@ -10,8 +11,8 @@ from .utils import start_logs, log_config, evaluate, sort_population, get_stats,
 
 
 
-def maximize(param, target_function):
-
+def maximize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
+    """Returns a tuple (arg_max, max_value) for the target function """
 
     start_logs()
     log_config(param=param)
@@ -66,3 +67,4 @@ def maximize(param, target_function):
 
     print(f"Best solution: {sorted_fitness[0]}")
     print(f"Found in point {sorted_population[0]}")
+    return sorted_population[0], sorted_fitness[0]
