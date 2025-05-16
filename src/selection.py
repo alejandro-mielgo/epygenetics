@@ -1,6 +1,5 @@
 import numpy as np
-from utils import *
-import random
+from .utils import sort_population, evaluate
 
 
 def roulette_wheel_selection(fitness: np.ndarray) -> np.ndarray:
@@ -36,13 +35,11 @@ def stochastic_sampling(fitness: np.ndarray) -> np.ndarray:
 
 def tournament_sampling(pop_size :int, tournament_size :int) -> np.ndarray:
     """Population must be sorted before calling this function!"""
-    parent_indexes = []
-    for i in range(pop_size):
-        participants_indexes = np.random.randint(0,pop_size,tournament_size)
-        winner_index = min(participants_indexes)
-        parent_indexes.append(winner_index)
     
-    return parent_indexes
+    participants_indexes = np.random.randint(low=0, high=pop_size, size=(pop_size,tournament_size))
+    winners_indexes = np.min(participants_indexes,axis=1)
+    
+    return winners_indexes
    
 
 if __name__ == "__main__":

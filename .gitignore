@@ -1,2 +1,3 @@
 logs
-git.log
+__pycache__
+__init__.py

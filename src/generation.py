@@ -18,12 +18,11 @@ def generate_uniform(
         
     new_population = np.random.uniform(low=lower_bound,high=upper_bound,size=(pop_size,n_variables))
 
-    # new_population = new_population.reshape((pop_size,n_variables))
+    
     return new_population
 
 
 def generate_bool(n_genes: int,population_size: int)->np.ndarray:
-
     return np.random.randint(low=0,high=1,size=(population_size,n_genes))
 
 

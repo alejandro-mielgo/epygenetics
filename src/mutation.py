@@ -5,18 +5,18 @@ import numpy as np
 #   ...
 #   individual_m[ gen_1, gen_2,.., gen_n]
    
-def mutate_real(population: np.ndarray, mutation_rate: float)->np.ndarray:
+def mutate_real(population: np.ndarray, mutation_rate: float) -> np.ndarray:
+    mutated_population = population.copy()
+    stdevs_per_column = np.std(mutated_population,axis=0)
+    gen_size = len(mutated_population[0])
 
-    stdevs_per_column = np.std(population,axis=0)
-    gen_size = len(population[0])
-
-    for row_i in range(len(population)):
+    for row_i in range(len(mutated_population)):
         mutation_probability = np.random.uniform(0,1)
         if mutation_probability < mutation_rate:
             gen_to_mutate = np.random.randint(0,gen_size)
-            population[row_i,gen_to_mutate] += np.random.normal(0,stdevs_per_column[gen_to_mutate])
+            mutated_population[row_i,gen_to_mutate] += np.random.normal(0,stdevs_per_column[gen_to_mutate])
     
-    return population
+    return mutated_population
 
 def mutate_discrete():
     pass
