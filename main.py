@@ -1,59 +1,81 @@
-# import matplotlib.pyplot as plt
 import numpy as np
+import logging
+
 from generation import generate_uniform
 from selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
 from crossover import crossover
-from Population import Population
 from mutation import mutate_real, mutate_discrete
-import logging
+
+from utils import start_logs, log_config, evaluate, sort_population, get_stats, log_row
 
 
-def target_function(x: list[float]) -> float:
+def target_function(x:np.ndarray) -> float:
 
     return 60 - (
-        x[0] ** 2
-        - 10 * np.cos(2 * np.pi * x[0])
-        + x[1] ** 2
-        - 10 * np.cos(2 * np.pi * x[1])
+        x[:,0] ** 2  - 10 * np.cos(2 * np.pi * x[:,0])
+        + x[:,1] ** 2 - 10 * np.cos(2 * np.pi * x[:,1])
     )
 
 
-n_genarations :int = 100
-lower_bound :tuple[float] =(-8,-8)
-upper_bound :tuple[float] = (8, 8)
-pop_size :int = 100
-mutation_rate:float = 0.5
-crossover_method:str = "opc"
-history:dict = {}
+param : dict = {
+    "n_generations"  : 100,
+    "lower_bound" : (-8,-8),
+    "upper_bound"  : (8, 8),
+    "pop_size"  : 100,
+    "mutation_rate" : 0.5,
+    "crossover_method" : "opc"
+}
 
 
 if __name__ == "__main__":
 
 
-    logger = logging.getLogger(__name__)
-    logging.basicConfig(format='%(asctime)s %(message)s',filename='logs/genetics.log',level=logging.INFO)
+    start_logs()
+    log_config(param=param)
+    history = {"mean":[],"stdev":[],"max_fit":[],"min_fit":[],"median":[]}
 
 
-    population : Population = Population(kind="real", population_size=pop_size, dimension=2)
-    population.generate_uniform(lower_bound=lower_bound, upper_bound=upper_bound)
+
+    population:np.ndarray = generate_uniform(lower_bound=param["lower_bound"],
+                                             upper_bound=param["upper_bound"],
+                                             pop_size=param["pop_size"])
+
+    
+    logging.info("gen\t\tmean\t\tstdev\t\tmax_fit\t\tmin_fit\t\tmedian ") #Table headers
+    
+
+    for i in range(param['n_generations']):
+        
+        #Evaluate population fitness
+        fitness:np.ndarray = evaluate(population=population, fitness_function=target_function)
+        
+        #Log current iteration metrics
+        generation_metrics=get_stats(fitness=fitness)
+        for key in generation_metrics:
+            history[key].append(generation_metrics[key])
+        log_row(generation=i,metrics=generation_metrics)
+
+        # Select parents
+        sorted_population,sorted_fitness = sort_population(population=population,fitness=fitness)
+        parents_indexes:np.ndarray = tournament_sampling(pop_size=param['pop_size'] , tournament_size=2)
+        parents = sorted_population[parents_indexes]
+        best_individual = sorted_population[0].copy()
 
 
-    for i in range(n_genarations):
-
-        population.evaluate(target_function)
-        population.sort_by_fitness()
-        parents_indexes :np.ndarray =  tournament_sampling(population.population_size, 2)
-        parents :np.ndarray = population.individuals[parents_indexes]
-        children = crossover(parents, method=crossover_method)
-        population.individuals = mutate_real(children, mutation_rate=mutation_rate)
-        logging.info(f'best fitness generation {i} : {float(population.fitness[0]):.4f} \t found in {population.individuals[0]} ')
-   
+        #Generate children for next population crossover and mutation
+        children = crossover(parents,method=param['crossover_method'])
+        mutated_children = mutate_real(children,mutation_rate=param['mutation_rate'])
+        
+        population = mutated_children
+        population[-1] = best_individual
 
 
-    population.sort_by_fitness()
-    population.evaluate(target_function)
-    population.get_stats()
-    logging.info(f"n_gen:{n_genarations}, pop size: {pop_size}, mut_rate:{mutation_rate}")
-    logging.info(population.stats)
-    print(population.fitness[0])
-    print(population.individuals[0])
+
+
+    # Evaluate the las gen out of the loop
+    fitness = evaluate(population=population,fitness_function=target_function)
+    sorted_population,sorted_fitness = sort_population(population=population,fitness=fitness)
+
+
+    print(f"Best solution: {sorted_fitness[0]}")
+    print(f"Found in point {sorted_population[0]}")
