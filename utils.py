@@ -47,9 +47,9 @@ def log_config(param:dict)->None:
 
 
 def log_row(generation:int, metrics:dict) -> None:
-    row:str=f"{generation}\t\t\t"
+    row:str=f"{str(generation)[:8]:<8}\t"
     for key,value in metrics.items():
-        row = row + f"{str(value):.8}\t"
+        row = row + f"{str(value)[:8]:8}\t"
     logging.info(row)
 
 
@@ -63,8 +63,6 @@ if __name__=='__main__':
     fitness = evaluate(population=population,fitness_function=f)
     print(fitness)
     sorted_population = sort_population(population,fitness)
-
-
 
 
     # evaluate(population,f)
