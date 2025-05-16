@@ -4,11 +4,11 @@ from collections.abc import Callable
 
 from .generation import generate_uniform
 from .selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
-from .crossover import crossover
+from .crossover import perform_crossover
 from .mutation import mutate_real, mutate_discrete
-
-from .utils import start_logs, log_config, evaluate, sort_population, get_stats, log_row, bounce_population, create_bound_matrix
-
+from .log import start_logs, log_config,log_row
+from .utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix
+ 
 
 
 def maximize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
@@ -49,7 +49,7 @@ def maximize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> t
 
 
         #Generate children for next population crossover and mutation
-        children = crossover(parents,method=param['crossover_method'])
+        children = perform_crossover(parents,method=param['crossover_method'])
         mutated_children = mutate_real(children,mutation_rate=param['mutation_rate'])
         
         population = mutated_children

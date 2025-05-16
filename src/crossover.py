@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 
-def crossover(parents: np.ndarray, method="tpc") -> np.ndarray:
+def perform_crossover(parents: np.ndarray, method="tpc") -> np.ndarray:
     if method == "opc":
         return one_point_crossover(parents)
     if method == "tpc":
