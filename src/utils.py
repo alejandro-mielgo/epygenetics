@@ -16,6 +16,7 @@ def create_bound_matrix(lower_bounds:list,upper_bounds:list,pop_size:int) -> tup
 def bounce_population(population: np.ndarray,lower_bound_matrix:list,upper_bound_matrix:list):
     
     bounced_pop = population.copy()
+    
     bounced_pop = np.maximum(bounced_pop,lower_bound_matrix)
     bounced_pop = np.minimum(bounced_pop,upper_bound_matrix)
 

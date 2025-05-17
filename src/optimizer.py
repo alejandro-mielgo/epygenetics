@@ -2,12 +2,12 @@ import numpy as np
 import logging
 from collections.abc import Callable
 
-from .generation import generate_uniform
-from .selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
-from .crossover import perform_crossover
-from .mutation import mutate_real, mutate_discrete
-from .log import start_logs, log_config,log_row
-from .utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix
+from src.generation import generate_uniform
+from src.selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
+from src.crossover import perform_crossover
+from src.mutation import mutate_real, mutate_discrete
+from src.log import start_logs, log_config,log_row
+from src.utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix
  
 
 
@@ -16,6 +16,7 @@ def maximize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> t
 
     start_logs()
     log_config(param=param)
+
     history = {"mean":[],"stdev":[],"max_fit":[],"min_fit":[],"median":[]}
 
     lower_bound_matrix, upper_bound_matrix = create_bound_matrix(lower_bounds=param['lower_bound'],
@@ -27,7 +28,7 @@ def maximize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> t
                                              pop_size=param["pop_size"])
 
     
-    logging.info("gen\t\tmean\t\tstdev\t\tmax_fit\t\tmin_fit\t\tmedian ") #Table headers
+    logging.info("gen\t\tmean\t\tstdev\t\tmax_fit\t\tmin_fit\t\tmedian ") # Log headers
     
 
     for i in range(param['n_generations']):
@@ -50,7 +51,7 @@ def maximize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> t
 
         #Generate children for next population crossover and mutation
         children = perform_crossover(parents,method=param['crossover_method'])
-        mutated_children = mutate_real(children,mutation_rate=param['mutation_rate'])
+        mutated_children = mutate_real(children,mutation_rate=param['mutation_rate'],mutation_n_stdevs=param['mutation_n_stdevs'])
         
         population = mutated_children
         population[-1] = best_individual  # keep the best individual
