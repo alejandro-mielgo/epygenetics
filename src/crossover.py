@@ -13,11 +13,14 @@ def perform_crossover(parents: np.ndarray, method="tpc") -> np.ndarray:
 # esta programado solo el reeplazo generacional
 
 def one_point_crossover(parents: np.ndarray) -> np.ndarray:
-    # cada pareja de padres tiene 2 hijos para mantener la población constante
+    '''
+    [o,o,o,o,o,o] => [o,o,x,x,x,x]
+    [x,x,x,x,x,x] => [x,x,x,x,o,o]
+    '''
 
     population = parents.copy()
-    pop_size = len(population)
-    dim = len(population[0])
+    pop_size:int = len(population)
+    dim:int = len(population[0])
 
     for row in range(0, pop_size, 2):
         
@@ -33,6 +36,11 @@ def one_point_crossover(parents: np.ndarray) -> np.ndarray:
 
 
 def two_point_crossover(parents: np.ndarray) -> np.ndarray:
+
+    '''
+    [o,o,o,o,o,o] => [o,o,x,x,o,o]
+    [x,x,x,x,x,x] => [x,o,o,x,x,x]
+    '''
 
     population = parents.copy()
     pop_size = len(population)
