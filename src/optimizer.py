@@ -9,10 +9,16 @@ from src.mutation import mutate_real, mutate_discrete
 from src.log import start_logs, log_config,log_row
 from src.utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix
  
+def change_sign(func):
+    def wrapper(x):
+        return -1*func(x)
+    return wrapper
 
-
-def maximize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
+def optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
     """Returns a tuple (arg_max, max_value) for the target function """
+
+    if param['minimize'] == True:
+        target_function = change_sign(target_function)
 
     start_logs()
     log_config(param=param)
