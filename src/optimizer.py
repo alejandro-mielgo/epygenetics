@@ -14,6 +14,7 @@ def change_sign(func):
         return -1*func(x)
     return wrapper
 
+
 def optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
     """Returns a tuple (arg_max, max_value) for the target function """
 
@@ -74,4 +75,4 @@ def optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> t
 
     print(f"Best solution: {sorted_fitness[0]}")
     print(f"Found in point {sorted_population[0]}")
-    return sorted_population[0], sorted_fitness[0]
+    return sorted_population[0], sorted_fitness[0], history
