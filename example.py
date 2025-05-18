@@ -4,7 +4,6 @@ from src.optimizer import optimize
 from src.target_functions import rastrigin, booth, himmelblau
 
     
-
 parameters : dict = {
     "n_generations"  : 100,
     "lower_bound" : (-5.12,-5.12),
@@ -12,7 +11,7 @@ parameters : dict = {
     "pop_size"  : 100,
     "mutation_rate" : 0.5,      # how ofter a gene mutates
     "mutation_n_stdevs" : 1,    # how much it mutates in variable stdvs 
-    "crossover_method" : "tpc",
+    "crossover_method" : "tpc", # one point crossover or two point crossover
     "minimize": True
 }
 

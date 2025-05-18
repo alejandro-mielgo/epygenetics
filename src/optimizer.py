@@ -9,14 +9,14 @@ from src.mutation import mutate_real, mutate_discrete
 from src.log import start_logs, log_config,log_row
 from src.utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix
  
-def change_sign(func):
-    def wrapper(x):
+def change_sign(func:Callable) -> Callable:
+    def wrapper(x:np.ndarray):
         return -1*func(x)
     return wrapper
 
 
 def optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
-    """Returns a tuple (arg_max, max_value) for the target function """
+    """Returns a tuple (arg_max, max_value, history) for the target function """
 
     if param['minimize'] == True:
         target_function = change_sign(target_function)
