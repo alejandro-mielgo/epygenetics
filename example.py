@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.optimizer import optimize
+from src.genetic_optimizer import optimize
 from src.target_functions import rastrigin, booth, himmelblau
 
     
