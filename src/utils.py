@@ -2,8 +2,8 @@ import numpy as np
 from collections.abc import Callable
 
 
-def evaluate(population: np.ndarray, fitness_function:Callable) -> np.ndarray:
-    return fitness_function(population)
+def evaluate(population: np.ndarray, function:Callable) -> np.ndarray:
+    return function(population)
 
 
 def create_bound_matrix(lower_bounds:list,upper_bounds:list,pop_size:int) -> tuple[np.ndarray,np.ndarray]:
@@ -44,7 +44,28 @@ def get_stats(fitness: np.ndarray) -> dict:
             "median":float(median_fitness)}
 
 
+def change_sign(func:Callable) -> Callable:
+    def wrapper(x:np.ndarray):
+        return -1*func(x)
+    return wrapper
 
+
+def update_history(history:np.ndarray,
+                   population:np.ndarray,
+                   population_fitness:np.ndarray,
+                   fitness_function:Callable)->np.ndarray:
+    
+    """updates history for the swarm optimzer"""
+
+    history_fitness = evaluate(population=history, function=fitness_function)
+
+    mask_1d = history_fitness>population_fitness
+
+    mask = np.repeat(mask_1d,history.shape[1],axis=0).reshape(population.shape)
+    updated_history = mask*history + ~mask*population
+    
+    return updated_history
+    
 
 if __name__=='__main__':
 

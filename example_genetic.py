@@ -1,10 +1,10 @@
 import numpy as np
 
-from src.genetic_optimizer import optimize
+from src.genetic_optimizer import genetic_optimize
 from src.target_functions import rastrigin, booth, himmelblau
 
     
-parameters : dict = {
+p : dict = {
     "n_generations"  : 100,
     "lower_bound" : (-5.12,-5.12),
     "upper_bound"  : ( 5.12, 5.12),
@@ -16,5 +16,5 @@ parameters : dict = {
 }
 
 if __name__ == "__main__":
-    _,_,history = optimize(param=parameters, target_function=himmelblau)
+    _,_,history = genetic_optimize(param=p, target_function=rastrigin)
 

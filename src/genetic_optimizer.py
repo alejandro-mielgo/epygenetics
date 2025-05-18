@@ -7,19 +7,18 @@ from src.selection import roulette_wheel_selection, tournament_sampling, stochas
 from src.crossover import perform_crossover
 from src.mutation import mutate_real, mutate_discrete
 from src.log import start_logs, log_config,log_row
-from src.utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix
+from src.utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix, change_sign
  
-def change_sign(func:Callable) -> Callable:
-    def wrapper(x:np.ndarray):
-        return -1*func(x)
-    return wrapper
 
 
-def optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
+
+def genetic_optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> tuple:
     """Returns a tuple (arg_max, max_value, history) for the target function """
 
-    if param['minimize'] == True:
-        target_function = change_sign(target_function)
+    if param['minimize']:
+        fitness_function = change_sign(target_function)
+    else:
+        fitness_function = target_function
 
     start_logs()
     log_config(param=param)
@@ -41,7 +40,7 @@ def optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> t
     for i in range(param['n_generations']):
         
         #Evaluate population fitness
-        fitness:np.ndarray = evaluate(population=population, fitness_function=target_function)
+        fitness:np.ndarray = evaluate(population=population, function=fitness_function)
         
         #Log current iteration metrics
         generation_metrics=get_stats(fitness=fitness)
@@ -69,10 +68,13 @@ def optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarray]) -> t
 
 
     # Evaluate the las gen out of the loop
-    fitness = evaluate(population=population,fitness_function=target_function)
-    sorted_population,sorted_fitness = sort_population(population=population,fitness=fitness)
+    fitness = evaluate(population=population, function=fitness_function)
+    best_individual_index = np.argmax(fitness)
 
+    best_individual = population[best_individual_index]
+    optimum_value = evaluate(population=population,function=target_function)[best_individual_index]
 
-    print(f"Best solution: {sorted_fitness[0]}")
-    print(f"Found in point {sorted_population[0]}")
-    return sorted_population[0], sorted_fitness[0], history
+    print(f"Best solution: {optimum_value}")
+
+    print( f"Found in point {best_individual}" )
+    return best_individual, optimum_value, history
