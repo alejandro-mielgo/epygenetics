@@ -1,7 +1,11 @@
 import logging
 import time
+import os
 
 def start_logs():
+
+    if os.path.exists('./logs')==False:
+        os.mkdir('./logs')
     today = time.strftime("%Y-%m-%d")
     logging.basicConfig(
         filename=f"./logs/{today}_gen.log",
