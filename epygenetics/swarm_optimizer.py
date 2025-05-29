@@ -1,7 +1,7 @@
 import numpy as np
 
-from src.generation import generate_uniform
-from src.utils import evaluate, update_history,change_sign,  bounce_population, create_bound_matrix
+from epygenetics.generation import generate_uniform
+from epygenetics.utils import evaluate, update_history,change_sign,  bounce_population, create_bound_matrix
 
 
 def swarm_optimize(p, target_function):

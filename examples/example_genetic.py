@@ -1,7 +1,5 @@
-import numpy as np
-
-from src.genetic_optimizer import genetic_optimize
-from src.target_functions import rastrigin, booth, himmelblau
+from epygenetics import genetic_optimize
+from epygenetics import rastrigin, booth, himmelblau
 
     
 p : dict = {
@@ -17,4 +15,5 @@ p : dict = {
 
 if __name__ == "__main__":
     _,_,history = genetic_optimize(param=p, target_function=rastrigin)
+    
 

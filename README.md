@@ -1,6 +1,6 @@
 # Genetic Algorithm
 
-Genetic algorithm for maximization using numpy.
+Genetic algorithm for function optimization using numpy.
 
 ### Format to define target function:
 

@@ -13,7 +13,7 @@ def create_bound_matrix(lower_bounds:list,upper_bounds:list,pop_size:int) -> tup
     return lower_bound_matrix, upper_bound_matrix
 
 
-def bounce_population(population: np.ndarray,lower_bound_matrix:list,upper_bound_matrix:list):
+def bounce_population(population:np.ndarray,lower_bound_matrix:np.ndarray,upper_bound_matrix:np.ndarray):
     
     bounced_pop = population.copy()
     
@@ -66,16 +66,5 @@ def update_history(history:np.ndarray,
     
     return updated_history
     
-
-if __name__=='__main__':
-
-    def f(x:np.ndarray):
-        return x[:,0]*x[:,1]
-    
-    population = np.random.uniform(low=(0,0), high=(10,10), size=(5,2))
-
-    print(population)
-    bounced_pop = bounce_population(population=population, lower_bounds=(1,2),upper_bounds=(5,6))
-    print(bounced_pop)
 
     

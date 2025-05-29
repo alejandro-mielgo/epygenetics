@@ -1,5 +1,5 @@
-from src.swarm_optimizer import swarm_optimize
-from src.target_functions import rastrigin, booth, himmelblau
+from epygenetics import swarm_optimize
+from epygenetics import rastrigin, booth, himmelblau
 
 p : dict = {
     "n_iterations"  : 50,

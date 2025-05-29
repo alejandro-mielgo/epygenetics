@@ -2,12 +2,12 @@ import numpy as np
 import logging
 from collections.abc import Callable
 
-from src.generation import generate_uniform
-from src.selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
-from src.crossover import perform_crossover
-from src.mutation import mutate_real, mutate_discrete
-from src.log import start_logs, log_config,log_row
-from src.utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix, change_sign
+from epygenetics.generation import generate_uniform
+from epygenetics.selection import roulette_wheel_selection, tournament_sampling, stochastic_sampling
+from epygenetics.crossover import perform_crossover
+from epygenetics.mutation import mutate_real, mutate_discrete
+from epygenetics.log import start_logs, log_config,log_row
+from epygenetics.utils import evaluate, sort_population, get_stats, bounce_population, create_bound_matrix, change_sign
  
 
 
@@ -69,7 +69,7 @@ def genetic_optimize(param:dict, target_function:Callable[[np.ndarray],np.ndarra
 
     # Evaluate the las gen out of the loop
     fitness = evaluate(population=population, function=fitness_function)
-    best_individual_index = np.argmax(fitness)
+    best_individual_index = int(np.argmax(fitness))
 
     best_individual = population[best_individual_index]
     optimum_value = evaluate(population=population,function=target_function)[best_individual_index]
